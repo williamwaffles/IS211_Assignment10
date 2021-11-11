@@ -1,3 +1,24 @@
+import sqlite3 as lite
+
 
 if __name__ == "__main__":
-    pass
+
+    con = lite.connect('pets.db')
+
+    with con:
+
+        id = input("Hello user! Please enter your ID (1 - 4): ")
+        cur = con.cursor()
+
+        if int(id) > 0 and int(id) <= 4:
+
+            cur.execute(f"SELECT person.first_name, person.last_name, person.age FROM person WHERE id = {id}")
+            data = cur.fetchall()
+            print(f"User information: {data}")
+            cur.execute(f"SELECT pet.name, pet.breed, pet.age FROM pet JOIN person_pet ON pet.id = person_pet.pet_id JOIN person ON person_pet.person_id = person.id WHERE person.id = {id}")
+            data = cur.fetchall()
+            print(f"User's pet information: {data}")
+
+        else:
+
+            print('User does not exist!')
